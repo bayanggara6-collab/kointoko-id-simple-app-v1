@@ -14,20 +14,15 @@ workflows:
         script: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
 
-      - name: Build Android release AAB
+      - name: Build AAB dan APK sekaligus
         script: |
           cd $CM_BUILD_DIR
           chmod +x gradlew
-          ./gradlew bundleRelease
-
-      - name: Build Android release APK
-        script: |
-          cd $CM_BUILD_DIR
-          ./gradlew assembleRelease
+          ./gradlew bundleRelease assembleRelease
 
     artifacts:
-      - app/build/outputs/bundle/release/app-release.aab
-      - app/build/outputs/apk/release/app-release.apk
+      - app/build/outputs/**/*.aab
+      - app/build/outputs/**/*.apk
 
     publishing:
       email:
