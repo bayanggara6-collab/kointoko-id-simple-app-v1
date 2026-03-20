@@ -1,0 +1,38 @@
+workflows:
+  android-release:
+    name: KoinToko - Build & Release
+    max_build_duration: 60
+    environment:
+      android_signing:
+        - kointoko_keystore
+      vars:
+        PACKAGE_NAME: "id.kointoko.app"
+      java: 17
+
+    scripts:
+      - name: Set Android SDK location
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+
+      - name: Build Android release AAB
+        script: |
+          cd $CM_BUILD_DIR
+          chmod +x gradlew
+          ./gradlew bundleRelease
+
+      - name: Build Android release APK
+        script: |
+          cd $CM_BUILD_DIR
+          ./gradlew assembleRelease
+
+    artifacts:
+      - app/build/outputs/bundle/release/app-release.aab
+      - app/build/outputs/apk/release/app-release.apk
+
+    publishing:
+      email:
+        recipients:
+          - your@email.com        # ← GANTI dengan email kamu
+        notify:
+          success: true
+          failure: true
